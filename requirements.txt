@@ -1,0 +1,10 @@
+langchain==0.2.14
+langchain-community==0.2.12
+langchain-groq===0.1.9
+unstructured
+selenium==4.21.0
+chromadb
+streamlit
+pandas
+python-dotenv
+pypdf

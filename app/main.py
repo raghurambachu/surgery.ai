@@ -1,36 +1,54 @@
 import streamlit as st
 from langchain_community.document_loaders import WebBaseLoader
+import logging
+
 
 from chains import Chain
-
 from utils import clean_text
+
+def load_documents(urls):
+    documents = []
+    for url in urls:
+        try:
+            loader = WebBaseLoader([url])
+            document = loader.load()
+            cleaned_text = clean_text(document.pop().page_content)
+            documents.append(cleaned_text)
+        except Exception as e:
+            logging.error(f"Error processing URL {url}: {str(e)}")
+    return documents
 
 def create_streamlit_app(llm):
     previous_queries = []
 
     st.title("📔Surgery.ai ")
-    body_part = st.selectbox("Select Body Part", ("Hip", "Knee","Shoulder"))
+    body_part = st.selectbox("Select Body Part", ("Hip", "Knee","Shoulder","Ankle"))
     query = st.text_input("Ask your query:", value="")
     submit_button = st.button("Submit")
 
+
+
     if body_part == "Hip":
-        url_input = "https://www.hss.edu/article_hip-replacement-recovery.asp"
-    if body_part == "Shoulder":
-        url_input = "https://my.clevelandclinic.org/health/treatments/8290-shoulder-replacement"
-    if body_part == "knee":
-        url_input = "https://orthop.washington.edu/patient-care/articles/knee/total-knee-replacement-a-patients-guide.html"
-    if body_part == "ankle":
-        url_input ="https://www.hss.edu/condition-list_ankle-replacement-arthroplasty.asp"
+        url_input = ["https://www.hss.edu/article_hip-replacement-recovery.asp"]
+    elif body_part == "Knee":
+        url_input = [
+            "https://orthop.washington.edu/patient-care/articles/knee/total-knee-replacement-a-patients-guide.html"]
+    elif body_part == "Shoulder":
+        url_input = ["https://my.clevelandclinic.org/health/treatments/8290-shoulder-replacement"]
+    elif body_part == "Ankle":
+        url_input = ["https://www.hss.edu/condition-list_ankle-replacement-arthroplasty.asp"]
+    else:
+        url_input = []
 
     if submit_button:
-        previous_queries.append({"is_user": True, "message":query })
+        previous_queries.append({"is_user": True, "message": query})
+        print(url_input)
         try:
-            loader = WebBaseLoader([url_input])
-            data = loader.load().pop().page_content
-            response = llm.extract_patient_guide(data,query)
-
-            previous_queries.append({"is_user":False,"message" :response})
-
+            data = load_documents(url_input)
+            # print(data)
+            response = llm.extract_patient_guide(data, query)
+            # previous_queries.append({"is_user": False, "message": response})
+            #
             st.write(response)
 
             #

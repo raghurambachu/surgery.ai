@@ -17,8 +17,10 @@ def create_streamlit_app(llm):
         url_input = "https://www.hss.edu/article_hip-replacement-recovery.asp"
     if body_part == "Shoulder":
         url_input = "https://my.clevelandclinic.org/health/treatments/8290-shoulder-replacement"
-    else:
+    if body_part == "knee":
         url_input = "https://orthop.washington.edu/patient-care/articles/knee/total-knee-replacement-a-patients-guide.html"
+    if body_part == "ankle":
+        url_input ="https://www.hss.edu/condition-list_ankle-replacement-arthroplasty.asp"
 
     if submit_button:
         previous_queries.append({"is_user": True, "message":query })

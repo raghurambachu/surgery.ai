@@ -29,6 +29,17 @@ def create_streamlit_app(llm):
     query = st.session_state["query"]
 
     st.title("orthoassist.ai (Roa)")
+    st.subheader("A Generative AI chatbot powered by LLaMA technology, specifically designed for patients considering joint replacement surgery. It Provides accurate, empathetic, and real-time responses to patient queries.")
+    st.info("""
+        Instructions to use the chatbot - 
+        1. Select the joint you would like to undergo surgery for.
+        2. Ask your queries.
+        
+         Example questions:
+        1. What exercises can I do at home to help my hip heal after surgery?
+        2. Are there any risks or side effects I should be aware of before my joint replacement?
+       
+    """)
     body_part = st.selectbox("Select Body Part", ("Hip", "Knee","Shoulder","Ankle"))
 
     # Clear the query input and chat history when body part changes
@@ -38,7 +49,7 @@ def create_streamlit_app(llm):
 
     st.session_state['last_body_part'] = body_part
 
-    query = st.text_input("Ask your query:", value=st.session_state["query"], key="query_input")
+    query = st.text_input("Ask your query:", value=st.session_state["query"], key="query_input",placeholder="What should I expect during a knee replacement surgery?")
     submit_button = st.button("Submit")
 
     if body_part == "Hip":
@@ -72,8 +83,8 @@ def create_streamlit_app(llm):
             with col1:
                 if is_user:
                     st.markdown(f"""
-                        <div style="background-color: #333; border-radius: 10px; padding: 10px 20px; margin-bottom: 20px; position: relative;">
-                            <div style="background-color: #333; position: absolute; top: 0; right: 0; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left:   
+                        <div style="background-color: rgb(100 116 139); color: rgb(148 163 184); border-radius: 10px; padding: 5px 20px; margin-bottom: 20px; position: relative;">
+                            <div style="background-color: rgb(100 116 139); color: rgb(148 163 184); position: absolute; top: 0; right: 0; width: 0; height: 0; border-left:   
  10px solid #333;"></div>
                             **You:** {query_data["message"]}
                         </div>
@@ -81,8 +92,8 @@ def create_streamlit_app(llm):
             with col2:
                 if not is_user:
                     st.markdown(f"""
-                                            <div style="background-color: #333; border-radius: 10px; padding: 10px 20px; margin-bottom: 20px; position: relative;">
-                                                <div style="background-color: #333; position: absolute; top: 0; left: 0; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right:   
+                                            <div style="background-color: rgb(100 116 139);color: rgb(148 163 184); border-radius: 10px; padding: 5px 20px; margin-bottom: 20px; position: relative;">
+                                                <div style="background-color: rgb(100 116 139);color: rgb(148 163 184); rgb(226 232 240); position: absolute; top: 0; left: 0; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right:   
                      10px solid #333;"></div>
                                                 **Roa:**  {query_data["message"]}
                                             </div>
